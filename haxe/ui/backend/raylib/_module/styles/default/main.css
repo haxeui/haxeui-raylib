@@ -1,0 +1,16 @@
+.menu {
+    width: 100px;
+}
+
+.scroll .inc, .scroll .deinc, .scroll .thumb {
+    height: 15px;
+    width: 15px;
+}
+
+.vertical-scroll {
+    width: 15px;
+}
+
+.horizontal-scroll {
+    height: 15px;
+}

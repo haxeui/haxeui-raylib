@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<module>
+    <resources>
+        <resource path="/haxe/ui/backend/raylib/_module/styles" prefix="haxeui-raylib/styles" />
+    </resources>
+    <themes>
+        <global>
+            <style resource="haxeui-raylib/styles/main.css" />
+        </global>
+        <default>
+            <style resource="haxeui-raylib/styles/default/main.css" />
+        </default>
+    </themes>
+</module>
