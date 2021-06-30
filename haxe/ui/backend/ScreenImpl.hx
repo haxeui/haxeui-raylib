@@ -1,5 +1,6 @@
 package haxe.ui.backend;
 
+import haxe.ui.backend.raylib.KeyboardHelper;
 import haxe.ui.backend.raylib.MouseHelper;
 import haxe.ui.core.Component;
 import haxe.ui.events.MouseEvent;
@@ -46,6 +47,12 @@ class ScreenImpl extends ScreenBase {
         for (c in rootComponents) {
             c.draw();
         }
+    }
+    
+    public function update() {
+        MouseHelper.update();
+        KeyboardHelper.update();
+        TimerImpl.update();
     }
     
     private override function supportsEvent(type:String):Bool {

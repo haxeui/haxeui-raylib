@@ -365,11 +365,11 @@ class TextField {
     private function performKeyOperation(code:Int) {
         var orginalCaretPos:CharPosition = { row: _caretInfo.row, column: _caretInfo.column };
         
-        if (code == KEY_ENTER || code == KEY_KP_ENTER) {
+        if (code == KeyboardKey.ENTER || code == KeyboardKey.KP_ENTER) {
             if (multiline) {
                 insertText("\n");
             }
-        } else if (code == KEY_LEFT) {
+        } else if (code == KeyboardKey.LEFT) {
             moveCaretLeft();
 
             if (_ctrl) {
@@ -388,7 +388,7 @@ class TextField {
             } else {
                 resetSelection();
             }
-        } else if (code == KEY_RIGHT) {
+        } else if (code == KeyboardKey.RIGHT) {
             moveCaretRight();
 
             if (_ctrl) {
@@ -407,7 +407,7 @@ class TextField {
             } else {
                 resetSelection();
             }
-        } else if (code == KEY_UP) {
+        } else if (code == KeyboardKey.UP) {
             if (_caretInfo.row > 0) {
                 _caretInfo.column = findClosestColumn(_caretInfo, -1);
                 _caretInfo.row--;
@@ -419,7 +419,7 @@ class TextField {
             } else {
                 resetSelection();
             }
-        } else if (code == KEY_DOWN) {
+        } else if (code == KeyboardKey.DOWN) {
             if (_caretInfo.row < _lines.length - 1) {
                 _caretInfo.column = findClosestColumn(_caretInfo, 1);
                 _caretInfo.row++;
@@ -431,7 +431,7 @@ class TextField {
             } else {
                 resetSelection();
             }
-        } else if (code == KEY_BACKSPACE) {
+        } else if (code == KeyboardKey.BACKSPACE) {
             if (hasSelection) {
                 insertText("");
             } else {
@@ -449,7 +449,7 @@ class TextField {
                     deleteCharsFromCaret(-1);
                 }
             }
-        } else if (code == KEY_DELETE) {
+        } else if (code == KeyboardKey.DELETE) {
             if (hasSelection) {
                 insertText("");
             } else {
@@ -470,7 +470,7 @@ class TextField {
                     deleteCharsFromCaret(1, false);
                 }
             }
-        } else if (code == KEY_HOME) {
+        } else if (code == KeyboardKey.HOME) {
             scrollLeft = 0;
             _caretInfo.column = 0;
             scrollToCaret();
@@ -480,7 +480,7 @@ class TextField {
             } else {
                 resetSelection();
             }
-        } else if (code == KEY_END) {
+        } else if (code == KeyboardKey.END) {
             var line = _lines[_caretInfo.row];
             scrollLeft = widthOfCharacters(fontSize, line, 0, line.length) - width + caretWidth;
             if (scrollLeft < 0) {
@@ -494,7 +494,7 @@ class TextField {
             } else {
                 resetSelection();
             }
-        } else if (code == KEY_A) {
+        } else if (code == KeyboardKey.A) {
             if (_ctrl) {
                 _selectionInfo.start.row = 0;
                 _selectionInfo.start.column = 0;
@@ -507,15 +507,15 @@ class TextField {
                 _selectionInfo.end.column = line.length;
                 scrollToCaret();
             }
-        } else if (code == KEY_C) {
+        } else if (code == KeyboardKey.C) {
             if (_ctrl) {
                 SetClipboardText(onCopy());
             }
-        } else if (code == KEY_X) {
+        } else if (code == KeyboardKey.X) {
             if (_ctrl) {
                 SetClipboardText(onCut());
             }
-        } else if (code == KEY_V) {
+        } else if (code == KeyboardKey.V) {
             if (_ctrl) {
                 onPaste(GetClipboardText());
             }
@@ -631,7 +631,7 @@ class TextField {
             return;
         }
         
-        if (event.keyCode == KeyboardKey.KEY_LEFT_SHIFT || event.keyCode == KeyboardKey.KEY_RIGHT_SHIFT) {
+        if (event.keyCode == KeyboardKey.LEFT_SHIFT || event.keyCode == KeyboardKey.RIGHT_SHIFT) {
             if (!hasSelection) {
                 _selectionInfo.start.row = _caretInfo.row;
                 _selectionInfo.start.column = _caretInfo.column;
@@ -639,7 +639,7 @@ class TextField {
                 _selectionInfo.end.column = _caretInfo.column;
             }
             _shift = true;
-        } else if (event.keyCode == KeyboardKey.KEY_LEFT_CONTROL || event.keyCode == KeyboardKey.KEY_RIGHT_CONTROL) {
+        } else if (event.keyCode == KeyboardKey.LEFT_CONTROL || event.keyCode == KeyboardKey.RIGHT_CONTROL) {
             _ctrl = true;
         }
 
@@ -711,9 +711,9 @@ class TextField {
             return;
         }
 
-        if (event.keyCode == KeyboardKey.KEY_LEFT_SHIFT || event.keyCode == KeyboardKey.KEY_RIGHT_SHIFT) {
+        if (event.keyCode == KeyboardKey.LEFT_SHIFT || event.keyCode == KeyboardKey.RIGHT_SHIFT) {
             _shift = false;
-        } else if (event.keyCode == KeyboardKey.KEY_LEFT_CONTROL || event.keyCode == KeyboardKey.KEY_RIGHT_CONTROL) {
+        } else if (event.keyCode == KeyboardKey.LEFT_CONTROL || event.keyCode == KeyboardKey.RIGHT_CONTROL) {
             _ctrl = false;
         }
         

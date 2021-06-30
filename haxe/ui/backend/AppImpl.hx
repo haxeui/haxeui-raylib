@@ -24,9 +24,7 @@ class AppImpl extends AppBase {
         SetTargetFPS(60);
         
         while (!WindowShouldClose()) {
-            MouseHelper.update();
-            KeyboardHelper.update();
-            TimerImpl.update();
+            Screen.instance.update();
             
             BeginDrawing();
                 ClearBackground(Colors.RAYWHITE);
