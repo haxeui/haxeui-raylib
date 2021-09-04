@@ -42,6 +42,25 @@ class TextDisplayImpl extends TextBase {
 
     private var _lines:Array<String>;
     private override function measureText() {
+        measureTextBreakWords();
+        
+        var maxWidth:Float = _width * Toolkit.scale;
+        if (_width > 0 && _textWidth > maxWidth) {
+            measureTextBreakAny();
+        }
+        
+        _textWidth = Math.round(_textWidth + 1);
+        _textHeight = Math.round(_textHeight);
+        
+        if (_textWidth % 2 != 0) {
+            _textWidth++;
+        }
+        if (_textHeight % 2 != 0) {
+            _textHeight++;
+        }
+    }
+    
+    private function measureTextBreakAny() {
         if (_text == null || _text.length == 0 ) {
             _textWidth = 0;
             _textHeight = 0;
@@ -55,7 +74,57 @@ class TextDisplayImpl extends TextBase {
             _textHeight = _fontSize;
             return;
         }
+        
+        var maxWidth:Float = _width * Toolkit.scale;
+        _lines = new Array<String>();
+        _text = normalizeText(_text);
+        var lines = _text.split("\n");
+        var biggestWidth:Float = 0;
+        for (line in lines) {
+            var tw = MeasureText(line, _fontSize);
+            if (tw > maxWidth) {
+                var words = Lambda.list(line.split(""));
+                while (!words.isEmpty()) {
+                    line = words.pop();
+                    tw = MeasureText(line, _fontSize);
+                    biggestWidth = Math.max(biggestWidth, tw);
+                    var nextWord = words.pop();
+                    while (nextWord != null && (tw = MeasureText(line + "" + nextWord, _fontSize)) <= maxWidth) {
+                        biggestWidth = Math.max(biggestWidth, tw);
+                        line += "" + nextWord;
+                        nextWord = words.pop();
+                    }
+                    _lines.push(line);
+                    if (nextWord != null) {
+                        words.push(nextWord);
+                    }
+                }
+            } else {
+                biggestWidth = Math.max(biggestWidth, tw);
+                if (line != '') {
+                    _lines.push(line);
+                }
+            }
+        }
 
+        _textWidth = biggestWidth / Toolkit.scale;
+        _textHeight = (_fontSize * _lines.length) / Toolkit.scale;
+    }
+    
+    private function measureTextBreakWords() {
+        if (_text == null || _text.length == 0 ) {
+            _textWidth = 0;
+            _textHeight = 0;
+            return;
+        }
+
+        if (_width <= 0) {
+            _lines = new Array<String>();
+            _lines.push(_text);
+            _textWidth = MeasureText(_text, _fontSize);
+            _textHeight = _fontSize;
+            return;
+        }
 
         var maxWidth:Float = _width * Toolkit.scale;
         _lines = new Array<String>();
@@ -92,15 +161,6 @@ class TextDisplayImpl extends TextBase {
         _textWidth = biggestWidth / Toolkit.scale;
         _textHeight = (_fontSize * _lines.length) / Toolkit.scale;
         
-        _textWidth = Math.round(_textWidth + 1);
-        _textHeight = Math.round(_textHeight);
-        
-        if (_textWidth % 2 != 0) {
-            _textWidth++;
-        }
-        if (_textHeight % 2 != 0) {
-            _textHeight++;
-        }
     }
     
     public function draw(x:Int, y:Int) {
