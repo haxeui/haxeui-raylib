@@ -3,6 +3,8 @@ package haxe.ui.backend;
 import RayLib.*;
 import haxe.ui.backend.raylib.StyleHelper;
 
+// might want to port this: https://github.com/mattdesl/word-wrapper/blob/master/index.js
+
 class TextDisplayImpl extends TextBase {
     private var _textAlign:String;
     private var _fontSize:Int = 10;
