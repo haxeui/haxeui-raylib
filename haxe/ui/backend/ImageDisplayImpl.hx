@@ -28,7 +28,11 @@ class ImageDisplayImpl extends ImageBase {
     public function draw(x:Int, y:Int) {
         var ix = x + _left;
         var iy = y + _top;
-        
-        DrawTexture(_texture, Std.int(ix), Std.int(iy), WHITE);
+
+        if (_imageWidth != _imageInfo.width || _imageHeight != _imageInfo.height) {
+            DrawTexture(_texture, Std.int(ix), Std.int(iy), WHITE);
+        } else {
+            DrawTexture(_texture, Std.int(ix), Std.int(iy), WHITE);
+        }
     }
 }
