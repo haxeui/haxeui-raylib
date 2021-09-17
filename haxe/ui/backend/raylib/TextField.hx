@@ -550,11 +550,13 @@ class TextField {
         notifyCaretMoved();
         scrollToCaret();
 
+        /*
         Timer.delay(function () {
             caretPosition = endIndex + delta;
             notifyCaretMoved();
             scrollToCaret();
         }, 10);
+        */
         
         
         resetSelection();
@@ -756,6 +758,8 @@ class TextField {
         }
         var line = _lines[_caretInfo.row];
         if (line == null) {
+            _caretInfo.row = 0;
+            _caretInfo.column = 0;
             return;
         }
         var totalWidth:Float = 0;
@@ -882,6 +886,10 @@ class TextField {
             if (start < text.length) {
                 _lines.push(StringExtensions.toCharArray(text.substring(start, text.length)));
             }
+            
+            if (StringTools.endsWith(text, "\r") || StringTools.endsWith(text, "\n")) {
+                _lines.push(["\n".charCodeAt(0)]);
+            }
         }
     }
 
@@ -975,7 +983,7 @@ class TextField {
         }
     }
 
-    private function ensureRowVisible(row:Int) {
+    public function ensureRowVisible(row:Int) {
         if (row >= scrollTop && row <= scrollTop + maxVisibleLines - 1) {
             return;
         }

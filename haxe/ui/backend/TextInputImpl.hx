@@ -28,6 +28,7 @@ class TextInputImpl extends TextBase {
     
     private function onTextChanged(text) {
         _text = text;
+        measureText();
         if (_inputData.onChangedCallback != null) {
             _inputData.onChangedCallback();
         }
@@ -98,6 +99,7 @@ class TextInputImpl extends TextBase {
             _tf.width = _width - offset;
         }
         if (_height > 0) {
+            _tf.ensureRowVisible(0);
             _tf.height = _height - offset;
         }
     }
