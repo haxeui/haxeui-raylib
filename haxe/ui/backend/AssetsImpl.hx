@@ -45,7 +45,7 @@ class AssetsImpl extends AssetsBase {
         var ext = "";
 
         if (compareBytes(bytes, [0xFF, 0xD8, 0xFF]) == true) {
-            ext = ".jpeg";
+            ext = ".jpg";
         } else if (compareBytes(bytes, [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]) == true) {
             ext = ".png";
         }
