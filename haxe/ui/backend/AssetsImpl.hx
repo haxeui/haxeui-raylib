@@ -16,7 +16,7 @@ class AssetsImpl extends AssetsBase {
     }
 
     public override function imageFromBytes(bytes:Bytes, callback:ImageInfo->Void) {
-        var p = NativeArray.address(bytes.getData(), 0);
+        var p = NativeArray.address(bytes.getData(), 0).constRaw;
         var image = LoadImageFromMemory(extensionFromMagicBytes(bytes), p, bytes.length);
         var texture = LoadTextureFromImage(image);
         UnloadImage(image);
