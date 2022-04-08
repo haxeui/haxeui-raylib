@@ -112,7 +112,7 @@ class StyleHelper {
         }
     }
     
-    public static  inline function col(c:Int, opacity:Float = 1):Color {
+    public static  inline function col(c:Int, opacity:Float = 1) {
         var o = Std.int(opacity * 255);
         return Color.create((c & 0xff0000) >> 16, (c & 0x00ff00) >> 8, (c & 0x0000ff), o);
     }
