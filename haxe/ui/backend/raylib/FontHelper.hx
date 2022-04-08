@@ -62,7 +62,7 @@ class FontHelper {
         }
         var bytes:Bytes = Resource.getBytes(resourceId);
         var p = NativeArray.address(bytes.getData(), 0).constRaw;
-        var font = LoadFontFromMemory(".ttf", p, bytes.length, 30, null, 255);
+        var font = LoadFontFromMemory(".ttf", p, bytes.length, 32, null, 255);
         setTtfFont(resourceId, size, font);
         return font;
     }
