@@ -1,6 +1,9 @@
 package haxe.ui.backend;
 
 import RayLib.*;
+import RayLib.Font;
+import RayLib.Vector2;
+import haxe.ui.backend.raylib.FontHelper;
 import haxe.ui.backend.raylib.StyleHelper;
 
 // might want to port this: https://github.com/mattdesl/word-wrapper/blob/master/index.js
@@ -8,9 +11,15 @@ import haxe.ui.backend.raylib.StyleHelper;
 class TextDisplayImpl extends TextBase {
     private var _textAlign:String;
     private var _fontSize:Int = 10;
-    private var _fontSpacing:Int = 1;
     private var _fontName:String;
     private var _color:Int;
+    private var _currentFontName:String = "default";
+    private var _currentFont:Font;
+    
+    public function new() {
+        super();
+        _currentFont = FontHelper.getFont(_currentFontName);
+    }
     
     private override function validateData() {
         if (_text != null) {
@@ -21,9 +30,12 @@ class TextDisplayImpl extends TextBase {
     }
     
     private override function validateStyle():Bool {
+        var measureTextRequired:Bool = false;
+        
         if (_textStyle != null) {
             if (_textAlign != _textStyle.textAlign) {
                 _textAlign = _textStyle.textAlign;
+                measureTextRequired = true;
             }
             
             if (_textStyle.color != null && _color != _textStyle.color) {
@@ -31,11 +43,22 @@ class TextDisplayImpl extends TextBase {
             }
             
             if (_textStyle.fontSize != null && _fontSize != _textStyle.fontSize) {
-                trace(_textStyle.fontSize);
                 _fontSize = Std.int(_textStyle.fontSize);
+                measureTextRequired = true;
+            }
+            
+            if (_textStyle.fontName != null && _textStyle.fontName != _currentFontName && this._fontInfo != null && this._fontInfo.data != null) {
+                _currentFontName = _textStyle.fontName;
+                if (StringTools.endsWith(_currentFontName, ".ttf")) {
+                    _currentFont = FontHelper.loadTtfFont(_currentFontName, _fontSize);
+                } else {
+                    _currentFont = this._fontInfo.data;
+                }
+                measureTextRequired = true;
             }
         }
-        return true;
+        
+        return measureTextRequired;
     }
     
     private override function validateDisplay() {
@@ -74,10 +97,12 @@ class TextDisplayImpl extends TextBase {
             return;
         }
 
+        var spacing = Std.int(_fontSize / _currentFont.baseSize);
+        
         if (_width <= 0) {
             _lines = new Array<String>();
             _lines.push(_text);
-            _textWidth = MeasureText(_text, _fontSize);
+            _textWidth = Std.int(MeasureTextEx(_currentFont, _text, _fontSize, spacing).x);
             _textHeight = _fontSize;
             return;
         }
@@ -88,15 +113,15 @@ class TextDisplayImpl extends TextBase {
         var lines = _text.split("\n");
         var biggestWidth:Float = 0;
         for (line in lines) {
-            var tw = MeasureText(line, _fontSize);
+            var tw = Std.int(MeasureTextEx(_currentFont, line, _fontSize, spacing).x);
             if (tw > maxWidth) {
                 var words = Lambda.list(line.split(""));
                 while (!words.isEmpty()) {
                     line = words.pop();
-                    tw = MeasureText(line, _fontSize);
+                    tw = Std.int(MeasureTextEx(_currentFont, line, _fontSize, spacing).x);
                     biggestWidth = Math.max(biggestWidth, tw);
                     var nextWord = words.pop();
-                    while (nextWord != null && (tw = MeasureText(line + "" + nextWord, _fontSize)) <= maxWidth) {
+                    while (nextWord != null && (tw = Std.int(MeasureTextEx(_currentFont, line + " " + nextWord, _fontSize, spacing).x)) <= maxWidth) {
                         biggestWidth = Math.max(biggestWidth, tw);
                         line += "" + nextWord;
                         nextWord = words.pop();
@@ -125,10 +150,12 @@ class TextDisplayImpl extends TextBase {
             return;
         }
 
+        var spacing = Std.int(_fontSize / _currentFont.baseSize);
+        
         if (_width <= 0) {
             _lines = new Array<String>();
             _lines.push(_text);
-            _textWidth = MeasureText(_text, _fontSize);
+            _textWidth = Std.int(MeasureTextEx(_currentFont, _text, _fontSize, spacing).x);
             _textHeight = _fontSize;
             return;
         }
@@ -139,15 +166,16 @@ class TextDisplayImpl extends TextBase {
         var lines = _text.split("\n");
         var biggestWidth:Float = 0;
         for (line in lines) {
-            var tw = MeasureText(line, _fontSize);
+            var tw = Std.int(MeasureTextEx(_currentFont, line, _fontSize, spacing).x);
             if (tw > maxWidth) {
                 var words = Lambda.list(line.split(" "));
                 while (!words.isEmpty()) {
                     line = words.pop();
-                    tw = MeasureText(line, _fontSize);
+                    tw = Std.int(MeasureTextEx(_currentFont, line, _fontSize, spacing).x);
                     biggestWidth = Math.max(biggestWidth, tw);
                     var nextWord = words.pop();
-                    while (nextWord != null && (tw = MeasureText(line + " " + nextWord, _fontSize)) <= maxWidth) {
+                    //while (nextWord != null && (tw = MeasureText(line + " " + nextWord, _fontSize)) <= maxWidth) {
+                    while (nextWord != null && (tw = Std.int(MeasureTextEx(_currentFont, line + " " + nextWord, _fontSize, spacing).x)) <= maxWidth) {
                         biggestWidth = Math.max(biggestWidth, tw);
                         line += " " + nextWord;
                         nextWord = words.pop();
@@ -172,10 +200,11 @@ class TextDisplayImpl extends TextBase {
     
     public function draw(x:Int, y:Int) {
         if (_lines != null) {
+            var spacing = Std.int(_fontSize / _currentFont.baseSize);
             var ty:Float = y + _top;
             for (line in _lines) {
                 var tx:Float = x;
-                var lx:Int = MeasureText(line, _fontSize);
+                var lx:Int = Std.int(MeasureTextEx(_currentFont, line, _fontSize, spacing).x);
             
                 switch(_textAlign) {
                     case "center":
@@ -188,8 +217,8 @@ class TextDisplayImpl extends TextBase {
                         tx += _left;
                 }
 
-                DrawText(line, Std.int(tx), Std.int(ty), _fontSize, StyleHelper.col(_color));
-                //DrawTextEx(line, Vector2.create(tx, ty), 
+                //DrawText(line, Std.int(tx), Std.int(ty), _fontSize, StyleHelper.col(_color));
+                DrawTextEx(_currentFont, line, Vector2.create(Std.int(tx), Std.int(ty)), _fontSize, spacing, StyleHelper.col(_color));
                 ty += _fontSize;
             }
         }

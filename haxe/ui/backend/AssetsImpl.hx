@@ -1,13 +1,18 @@
 package haxe.ui.backend;
 
+import RayLib.*;
+import RayLib.Colors;
 import cpp.NativeArray;
 import haxe.Resource;
 import haxe.io.Bytes;
+import haxe.ui.assets.FontInfo;
 import haxe.ui.assets.ImageInfo;
-import RayLib.*;
 import haxe.ui.backend.ImageData;
+import haxe.ui.backend.raylib.FontHelper;
 
 class AssetsImpl extends AssetsBase {
+    private static inline var FONT_TTF_DEFAULT_FIRST_CHAR = 32;
+    
     private override function getImageFromHaxeResource(resourceId:String, callback:String->ImageInfo->Void) {
         var bytes:Bytes = Resource.getBytes(resourceId);
         imageFromBytes(bytes, function(imageInfo) {
@@ -64,5 +69,45 @@ class AssetsImpl extends AssetsBase {
             i++;
         }
         return b;
+    }
+    
+    private override function getFontInternal(resourceId:String, callback:FontInfo->Void) {
+        if (FontHelper.hasFont(resourceId)) {
+            var f = FontHelper.getFont(resourceId);
+            callback({
+                data: f
+            });
+        } else {
+            callback(null);
+        }
+    }
+
+    private override function getFontFromHaxeResource(resourceId:String, callback:String->FontInfo->Void) {
+        var font = null;
+        var success:Bool = false;
+        if (StringTools.endsWith(resourceId.toLowerCase(), ".ttf")) {
+            font = FontHelper.loadTtfFont(resourceId, 16);
+            success = true;
+        } else {
+            var bytes:Bytes = Resource.getBytes(resourceId);
+            var p = NativeArray.address(bytes.getData(), 0).constRaw;
+            var image = LoadImageFromMemory(extensionFromMagicBytes(bytes), p, bytes.length);
+            if (image.data != null) {
+                font = LoadFontFromImage(image, Colors.MAGENTA, FONT_TTF_DEFAULT_FIRST_CHAR);
+                if (font.texture.id != 0) {
+                    success = true;
+                }
+            }
+            UnloadImage(image);
+        }
+        
+        if (success == true) {
+            FontHelper.setFont(resourceId, font);
+            callback(resourceId, {
+                data: font
+            });
+        } else {
+            callback(resourceId, null);
+        }
     }
 }
