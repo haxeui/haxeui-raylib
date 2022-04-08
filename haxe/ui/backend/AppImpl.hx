@@ -17,6 +17,7 @@ class AppImpl extends AppBase {
         
         SetConfigFlags(RayLib.ConfigFlags.MSAA_4X_HINT);
         SetConfigFlags(RayLib.ConfigFlags.VSYNC_HINT);
+        SetConfigFlags(RayLib.ConfigFlags.WINDOW_RESIZABLE);
         InitWindow(width, height, title);
         
         callback();
