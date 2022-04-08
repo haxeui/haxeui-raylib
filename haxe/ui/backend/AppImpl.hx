@@ -15,6 +15,8 @@ class AppImpl extends AppBase {
         var width:Int = Toolkit.backendProperties.getPropInt("haxe.ui.raylib.width", 1024);
         var height:Int = Toolkit.backendProperties.getPropInt("haxe.ui.raylib.height", 768);
         
+        SetConfigFlags(RayLib.ConfigFlags.MSAA_4X_HINT);
+        SetConfigFlags(RayLib.ConfigFlags.VSYNC_HINT);
         InitWindow(width, height, title);
         
         callback();
