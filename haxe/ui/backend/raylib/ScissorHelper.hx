@@ -51,6 +51,6 @@ class ScissorHelper {
                 y = Std.int(entry.rect.top);
             }
         }
-        BeginScissorMode(x, y, w - 1, h);
+        BeginScissorMode(x, y, w, h);
     }
 }    
