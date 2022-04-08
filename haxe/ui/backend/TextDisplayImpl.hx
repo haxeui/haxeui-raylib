@@ -26,8 +26,13 @@ class TextDisplayImpl extends TextBase {
                 _textAlign = _textStyle.textAlign;
             }
             
-            if (_color != _textStyle.color) {
+            if (_textStyle.color != null && _color != _textStyle.color) {
                 _color = _textStyle.color;
+            }
+            
+            if (_textStyle.fontSize != null && _fontSize != _textStyle.fontSize) {
+                trace(_textStyle.fontSize);
+                _fontSize = Std.int(_textStyle.fontSize);
             }
         }
         return true;
@@ -52,13 +57,13 @@ class TextDisplayImpl extends TextBase {
         }
         
         _textWidth = Math.round(_textWidth + 1);
-        _textHeight = Math.round(_textHeight);
+        _textHeight = Math.round(_textHeight - 1);
         
         if (_textWidth % 2 != 0) {
             _textWidth++;
         }
         if (_textHeight % 2 != 0) {
-            _textHeight++;
+            //_textHeight++;
         }
     }
     
@@ -184,6 +189,7 @@ class TextDisplayImpl extends TextBase {
                 }
 
                 DrawText(line, Std.int(tx), Std.int(ty), _fontSize, StyleHelper.col(_color));
+                //DrawTextEx(line, Vector2.create(tx, ty), 
                 ty += _fontSize;
             }
         }
