@@ -26,12 +26,21 @@ class AppImpl extends AppBase {
     public override function start() {
         SetTargetFPS(60);
         
+        var drawFPSDefault = false;
+        #if debug
+        drawFPSDefault = true;
+        #end
+        var drawFPS = Toolkit.backendProperties.getPropBool("haxe.ui.raylib.showFPS", drawFPSDefault);
+
         while (!WindowShouldClose()) {
             Screen.instance.update();
             
             BeginDrawing();
                 ClearBackground(Colors.RAYWHITE);
                 Screen.instance.draw();
+                if (drawFPS == true) {
+                    DrawFPS(GetScreenWidth() - 80, 5);
+                }
             EndDrawing();
         }
         
