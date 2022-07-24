@@ -45,6 +45,7 @@ class AppImpl extends AppBase {
                 ClearBackground(Colors.RAYWHITE);
                 Screen.instance.draw();
                 if (drawFPS == true) {
+                    DrawRectangle(GetScreenWidth() - 85, 0, 80, 25, Colors.RAYWHITE);
                     DrawFPS(GetScreenWidth() - 80, 5);
                 }
             EndDrawing();
