@@ -554,6 +554,11 @@ class ComponentImpl extends ComponentBase {
         if (this.isReady == false || cast(this, Component).hidden == true) {
             return;
         }
+
+        if ((this is haxe.ui.components.Canvas)) {
+            cast(this, haxe.ui.components.Canvas).componentGraphics.draw();
+            return;
+        }
         
         clearCaches();
         
