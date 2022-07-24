@@ -15,16 +15,22 @@ class AppImpl extends AppBase {
         var width:Int = Toolkit.backendProperties.getPropInt("haxe.ui.raylib.width", 1024);
         var height:Int = Toolkit.backendProperties.getPropInt("haxe.ui.raylib.height", 768);
         
-        SetConfigFlags(RayLib.ConfigFlags.MSAA_4X_HINT);
-        SetConfigFlags(RayLib.ConfigFlags.VSYNC_HINT);
-        SetConfigFlags(RayLib.ConfigFlags.WINDOW_RESIZABLE);
+        if (Toolkit.backendProperties.getPropBool("haxe.ui.raylib.msaa", true) == true) {
+            SetConfigFlags(RayLib.ConfigFlags.MSAA_4X_HINT);
+        }
+        if (Toolkit.backendProperties.getPropBool("haxe.ui.raylib.vsync", false) == true) {
+            SetConfigFlags(RayLib.ConfigFlags.VSYNC_HINT);
+        }
+        if (Toolkit.backendProperties.getPropBool("haxe.ui.raylib.window.resizable", true) == true) {
+            SetConfigFlags(RayLib.ConfigFlags.WINDOW_RESIZABLE);
+        }
         InitWindow(width, height, title);
         
         callback();
     }
     
     public override function start() {
-        SetTargetFPS(60);
+        SetTargetFPS(Toolkit.backendProperties.getPropInt("haxe.ui.raylib.targetFPS", 60));
         
         var drawFPSDefault = false;
         #if debug
