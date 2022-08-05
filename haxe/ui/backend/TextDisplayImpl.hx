@@ -91,9 +91,9 @@ class TextDisplayImpl extends TextBase {
     }
     
     private function measureTextBreakAny() {
-        if (_text == null || _text.length == 0 ) {
+        if (_text == null || _text.length == 0) {
             _textWidth = 0;
-            _textHeight = 0;
+            _textHeight = _fontSize;
             return;
         }
 
@@ -146,7 +146,7 @@ class TextDisplayImpl extends TextBase {
     private function measureTextBreakWords() {
         if (_text == null || _text.length == 0 ) {
             _textWidth = 0;
-            _textHeight = 0;
+            _textHeight = _fontSize;
             return;
         }
 
