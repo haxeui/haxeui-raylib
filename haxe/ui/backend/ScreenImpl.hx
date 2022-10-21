@@ -35,12 +35,12 @@ class ScreenImpl extends ScreenBase {
         rootComponents.push(component);
         resizeComponent(component);
         //component.dispatchReady();
-		return component;
+        return component;
     }
 
     public override function removeComponent(component:Component, dispose:Bool = true):Component {
         rootComponents.remove(component);
-		return component;
+        return component;
     }
     
     public function draw() {

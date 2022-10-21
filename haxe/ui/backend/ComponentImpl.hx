@@ -495,7 +495,7 @@ class ComponentImpl extends ComponentBase {
             if (hasComponentOver(cast this, x, y) == true) {
                 return;
             }
-			
+            
             if (_mouseDownFlag == true) {
                 var type = button == 0 ? haxe.ui.events.MouseEvent.CLICK: haxe.ui.events.MouseEvent.RIGHT_CLICK;
                 var fn:UIEvent->Void = _eventMap.get(type);
