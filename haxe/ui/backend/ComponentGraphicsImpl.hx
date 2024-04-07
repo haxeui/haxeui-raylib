@@ -23,7 +23,6 @@ class ComponentGraphicsImpl extends ComponentGraphicsBase {
     //private var _image:ImageRef = null;
     private var _texture:Texture = null;
     private var _hasTexture:Bool = false;
-    private var _lastBytes:Bytes = null;
     
     public function draw() {
         var currentPosition:Point = new Point();
@@ -150,14 +149,10 @@ class ComponentGraphicsImpl extends ComponentGraphicsBase {
                        var data = NativeArray.address(pixels.getData(), 0);
                        var image = Image.create(data.rawCast(), Std.int(_component.width), Std.int(_component.height), 1, PixelFormat.UNCOMPRESSED_R8G8B8A8);
                        _texture = LoadTextureFromImage(image);
-                       _lastBytes = pixels;
-                       //UnloadImage(image);
-                   } else if (_lastBytes != pixels) {
-                       _lastBytes = pixels;
-                       var data = NativeArray.address(pixels.getData(), 0);
-                       UpdateTexture(_texture, data.rawCast());
                    }
-                   DrawTexture(_texture, sx, sy, Colors.WHITE);
+                   var data = NativeArray.address(pixels.getData(), 0);
+                   UpdateTexture(_texture, data.rawCast());
+               DrawTexture(_texture, sx, sy, Colors.WHITE);
                case Image(resource, x, y, width, height):
             }
         }
