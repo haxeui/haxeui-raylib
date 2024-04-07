@@ -498,14 +498,14 @@ class ComponentImpl extends ComponentBase {
         lastMouseY = y;
         var i = inBounds(x, y);
         if (i == true) {
-            if (hasComponentOver(cast this, x, y) == true) {
-                return;
-            }
-            
             if (_mouseDownFlag == true) {
                 var type = button == 0 ? haxe.ui.events.MouseEvent.CLICK: haxe.ui.events.MouseEvent.RIGHT_CLICK;
                 var fn:UIEvent->Void = _eventMap.get(type);
                 if (fn != null) {
+                    if (hasComponentOver(cast this, x, y)) {
+                        return;
+                    }
+        
                     var mouseEvent = new haxe.ui.events.MouseEvent(type);
                     mouseEvent.screenX = x / Toolkit.scaleX;
                     mouseEvent.screenY = y / Toolkit.scaleY;
