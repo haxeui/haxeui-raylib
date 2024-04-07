@@ -18,7 +18,9 @@ class MouseHelper {
             _callbacks.set(event, list);
         }
         
-        list.push(callback);
+        if (!list.contains(callback)) {
+            list.push(callback);
+        }
     }
     
     public static function update() {

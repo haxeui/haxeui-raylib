@@ -364,7 +364,7 @@ class ComponentImpl extends ComponentBase {
     }
     
     private function hasComponentOver(ref:Component, x:Float, y:Float):Bool {
-        var array:Array<Component> = getComponentsAtPoint(x, y);
+        var array:Array<Component> = getComponentsAtPoint(x, y, true);
         if (array.length == 0) {
             return false;
         }
@@ -372,19 +372,25 @@ class ComponentImpl extends ComponentBase {
         return !hasChildRecursive(cast ref, cast array[array.length - 1]);
     }
 
-    private function getComponentsAtPoint(x:Float, y:Float):Array<Component> {
+    private function getComponentsAtPoint(x:Float, y:Float, checkPointerEvents:Bool = false):Array<Component> {
         var array:Array<Component> = new Array<Component>();
         for (r in Screen.instance.rootComponents) {
-            findChildrenAtPoint(r, x, y, array);
+            findChildrenAtPoint(r, x, y, array, checkPointerEvents);
         }
         return array;
     }
 
-    private function findChildrenAtPoint(child:Component, x:Float, y:Float, array:Array<Component>) {
+    private function findChildrenAtPoint(child:Component, x:Float, y:Float, array:Array<Component>, checkPointerEvents:Bool = false) {
         if (child.inBounds(x, y) == true) {
-            array.push(child);
+            if (checkPointerEvents) {
+                if (child.style == null || child.style.pointerEvents != "none") {
+                    array.push(child);
+                }
+            } else {
+                array.push(child);
+            }
             for (c in child.childComponents) {
-                findChildrenAtPoint(c, x, y, array);
+                findChildrenAtPoint(c, x, y, array, checkPointerEvents);
             }
         }
     }
