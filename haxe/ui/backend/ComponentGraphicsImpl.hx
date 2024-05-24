@@ -154,6 +154,7 @@ class ComponentGraphicsImpl extends ComponentGraphicsBase {
                    UpdateTexture(_texture, data.rawCast());
                DrawTexture(_texture, sx, sy, Colors.WHITE);
                case Image(resource, x, y, width, height):
+               case _:
             }
         }
     }
